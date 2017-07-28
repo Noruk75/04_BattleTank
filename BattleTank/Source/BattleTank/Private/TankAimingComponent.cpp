@@ -42,19 +42,20 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
     if (bHaveAimSolution) {
         auto AimDirection = OutLaunchVelocity.GetSafeNormal();
         MoveBarrelTowards(AimDirection);
-        //UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *(AimDirection.ToString()));
+        auto Time = GetWorld()->GetTimeSeconds();
+        UE_LOG(LogTemp, Warning, TEXT("%f aim solution found"), Time);
+    } else {
+        auto Time = GetWorld()->GetTimeSeconds();
+        UE_LOG(LogTemp, Warning, TEXT("%f no aim solution"), Time);
     }
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
     // animate the barrel to allign along the connecting turret socket to the barrel end socket.
-
-    //Barrel->GetSocketLocation(FName("Turret"));
-
     auto BarrelRotator = Barrel->GetForwardVector().Rotation();
     auto AimAsRotator = AimDirection.Rotation();
     auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-    Barrel->Elevate(5);
+    Barrel->Elevate(DeltaRotator.Pitch);
 }
