@@ -5,13 +5,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -21,29 +22,28 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
     Barrel = BarrelToSet;
 }
 
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+    Turret = TurretToSet;
+}
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-    /*auto OurTankName = GetOwner()->GetName();
-    auto BarrelLocation = Barrel->GetComponentLocation();
-    UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s from %s"), *OurTankName, *(HitLocation.ToString()), *(BarrelLocation.ToString()));*/
-
     if (!Barrel) { return; }
-    //UE_LOG(LogTemp, Warning, TEXT("Aiming at Barrel"));
+    if (!Turret) { return; }
 
     FVector OutLaunchVelocity;
     FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
     // Calculate the out launch velocity
     
-    
     FCollisionResponseParams CollisionResponseParam;
     TArray<AActor*> ActorsToIgnore;
-    bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace, CollisionResponseParam, ActorsToIgnore, true);
+    bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace, CollisionResponseParam, ActorsToIgnore, false);
     if (bHaveAimSolution) {
         auto AimDirection = OutLaunchVelocity.GetSafeNormal();
         MoveBarrelTowards(AimDirection);
         auto Time = GetWorld()->GetTimeSeconds();
-        UE_LOG(LogTemp, Warning, TEXT("%f aim solution found"), Time);
+        //UE_LOG(LogTemp, Warning, TEXT("%f aim solution found"), Time);
     } else {
         auto Time = GetWorld()->GetTimeSeconds();
         UE_LOG(LogTemp, Warning, TEXT("%f no aim solution"), Time);
@@ -58,4 +58,5 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
     auto DeltaRotator = AimAsRotator - BarrelRotator;
 
     Barrel->Elevate(DeltaRotator.Pitch);
+    Turret->Rotate(DeltaRotator.Yaw);
 }
