@@ -22,6 +22,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
     IntendTurn(TurnIntention);
     IntendMoveForward(ForwardIntention);
 
+    UE_LOG(LogTemp, Warning, TEXT("%f, %f"), TurnIntention, ForwardIntention)
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
