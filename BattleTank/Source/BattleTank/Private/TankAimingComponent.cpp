@@ -14,7 +14,7 @@ UTankAimingComponent::UTankAimingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
-    UE_LOG(LogTemp, Warning, TEXT("CARA: Tank Aiming Component Constructor"));
+    //UE_LOG(LogTemp, Warning, TEXT("CARA: Tank Aiming Component Constructor"));
 }
 
 
@@ -26,7 +26,7 @@ void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-    if (!Barrel || !Turret) { return; }
+    if (!ensure(Barrel) || !ensure(Turret)) { return; }
 
     FVector OutLaunchVelocity;
     FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -46,7 +46,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-    if (!Barrel || !Turret) { return; }
+    if (!ensure(Barrel) || !ensure(Turret)) { return; }
     // animate the barrel to allign along the connecting turret socket to the barrel end socket.
     auto BarrelRotator = Barrel->GetForwardVector().Rotation();
     auto AimAsRotator = AimDirection.Rotation();

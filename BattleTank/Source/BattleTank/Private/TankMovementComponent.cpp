@@ -22,12 +22,12 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
     IntendTurn(TurnIntention);
     IntendMoveForward(ForwardIntention);
 
-    UE_LOG(LogTemp, Warning, TEXT("%f, %f"), TurnIntention, ForwardIntention)
+    //UE_LOG(LogTemp, Warning, TEXT("%f, %f"), TurnIntention, ForwardIntention)
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-    if (!LeftTrack || !RightTrack) { return; }
+    if (!ensure(LeftTrack) || !ensure(RightTrack)) { return; }
     LeftTrack->SetThrottle(Throw);
     RightTrack->SetThrottle(Throw);
     // TODO prevent double speed
@@ -43,7 +43,7 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
 
 void UTankMovementComponent::IntendTurn(float Throw)
 {
-    if (!LeftTrack || !RightTrack) { return; }
+    if (!ensure(LeftTrack) || !ensure(RightTrack)) { return; }
     LeftTrack->SetThrottle(Throw);
     RightTrack->SetThrottle(-Throw);
     // TODO prevent double speed

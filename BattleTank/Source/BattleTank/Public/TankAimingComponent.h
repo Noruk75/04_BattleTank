@@ -26,7 +26,6 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 
 public:	
 	
-
     UFUNCTION(BlueprintCallable, Category = "Setup")
     void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
@@ -46,5 +45,4 @@ private:
     UTankBarrel* Barrel = nullptr;
     UTankTurret* Turret = nullptr;
 
-    
 };

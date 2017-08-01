@@ -13,22 +13,23 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-    auto TankName = GetName();
-    UE_LOG(LogTemp, Warning, TEXT("CARA: %s Tank Constructor"), *TankName);
+    /*auto TankName = GetName();
+    UE_LOG(LogTemp, Warning, TEXT("CARA: %s Tank Constructor"), *TankName);*/
 }
 
 void ATank::BeginPlay()
 {
     Super::BeginPlay();
 
-    auto TankName = GetName();
-    UE_LOG(LogTemp, Warning, TEXT("CARA: %s Tank Begin Play"), *TankName);
+    /*auto TankName = GetName();
+    UE_LOG(LogTemp, Warning, TEXT("CARA: %s Tank Begin Play"), *TankName);*/
 }
 
 void ATank::Fire()
 {
+    if (!ensure(Barrel)) { return; }
     bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-    if (Barrel && isReloaded) {
+    if (isReloaded) {
         // spawn a projectile at the barrel socket location
         auto Projectile = GetWorld()->SpawnActor<AProjectile>(
             ProjectileBlueprint,
@@ -43,7 +44,7 @@ void ATank::Fire()
 
 void ATank::AimAt(FVector HitLocation)
 {
-    if (TankAimingComponent) {
+    if (ensure(TankAimingComponent)) {
         TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
     }
 }
