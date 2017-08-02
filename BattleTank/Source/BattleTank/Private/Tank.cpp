@@ -12,6 +12,7 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+    
     /*auto TankName = GetName();
     UE_LOG(LogTemp, Warning, TEXT("CARA: %s Tank Constructor"), *TankName);*/
 }
@@ -20,6 +21,7 @@ void ATank::BeginPlay()
 {
     Super::BeginPlay();
 
+    TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
     /*auto TankName = GetName();
     UE_LOG(LogTemp, Warning, TEXT("CARA: %s Tank Begin Play"), *TankName);*/
 }
