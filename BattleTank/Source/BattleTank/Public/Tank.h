@@ -7,7 +7,6 @@
 #include "Tank.generated.h"
 
 class UTankBarrel;
-class UTankAimingComponent;
 class AProjectile;
 
 UCLASS()
@@ -22,13 +21,6 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Setup")
     void Fire();
-
-    void AimAt(FVector HitLocation);
-
-protected:
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Aiming")
-    UTankAimingComponent* TankAimingComponent = nullptr;
 
 private:	
 
