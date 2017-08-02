@@ -30,8 +30,6 @@ public:
 	
     UFUNCTION(BlueprintCallable, Category = "Setup")
     void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
-
-public:	
     
     void AimAt(FVector HitLocation);
     void MoveBarrelTowards(FVector AimDirection);
@@ -41,12 +39,14 @@ public:
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
-    EFiringState FiringState = EFiringState::Aiming;
+    EFiringState FiringState = EFiringState::Reloading;
 
+    virtual void BeginPlay() override;
 
 private:
     // Sets default values for this component's properties
     UTankAimingComponent();
+    virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
     // Local barrel reference for spawning projectile
     UTankBarrel* Barrel = nullptr;
