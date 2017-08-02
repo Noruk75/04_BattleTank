@@ -17,6 +17,8 @@ enum class EFiringState : uint8
 
 class UTankBarrel;
 class UTankTurret;
+class AProjectile;
+
 
 // Holds Barrel's Properties
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -34,6 +36,9 @@ public:
     void AimAt(FVector HitLocation);
     void MoveBarrelTowards(FVector AimDirection);
 
+    UFUNCTION(BlueprintCallable, Category = "Setup")
+    void Fire();
+
 protected:
     UPROPERTY(BlueprintReadOnly, Category = "State")
     EFiringState FiringState = EFiringState::Aiming;
@@ -43,10 +48,19 @@ private:
     // Sets default values for this component's properties
     UTankAimingComponent();
 
+    // Local barrel reference for spawning projectile
     UTankBarrel* Barrel = nullptr;
     UTankTurret* Turret = nullptr;
 
     UPROPERTY(EditDefaultsOnly, Category = "Firing")
     float LaunchSpeed = 4000.f;
-    
+
+    UPROPERTY(EditDefaultsOnly, Category = "Setup")
+    TSubclassOf<AProjectile> ProjectileBlueprint;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Firing")
+    float ReloadTimeInSeconds = 3.f;
+
+    double LastFireTime = 0;
+
 };

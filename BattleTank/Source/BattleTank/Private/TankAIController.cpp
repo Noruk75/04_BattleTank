@@ -22,8 +22,7 @@ void ATankAIController::Tick(float DeltaTime)
     MoveToActor(PlayerTank, AcceptanceRadius); // TODO check radius
     AimingComponent->AimAt(PlayerTank->GetActorLocation());
     // fire if ready
-    // TODO fix firing
-    //GetPawn()->Fire();
+    AimingComponent->Fire();
 
 }
 
