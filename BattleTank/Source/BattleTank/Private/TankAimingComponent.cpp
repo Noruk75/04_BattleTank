@@ -26,9 +26,19 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-    if ((FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds) {
+    if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds) {
         FiringState = EFiringState::Reloading;
+    } else if (IsBarrelMoving()) {
+        FiringState = EFiringState::Aiming;
+    } else {
+        FiringState = EFiringState::Locked;
     }
+}
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+    if (!ensure(Barrel)) { return false; }
+    return !AimDirection.Equals(Barrel->GetForwardVector(), 0.01);
 }
 
 void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -49,7 +59,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
     TArray<AActor*> ActorsToIgnore;
     bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace, CollisionResponseParam, ActorsToIgnore, false);
     if (bHaveAimSolution) {
-        auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+        AimDirection = OutLaunchVelocity.GetSafeNormal();
         MoveBarrelTowards(AimDirection);
         //auto Time = GetWorld()->GetTimeSeconds();
         //UE_LOG(LogTemp, Warning, TEXT("%f aim solution found"), Time);
