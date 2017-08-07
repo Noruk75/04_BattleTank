@@ -80,7 +80,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
     Barrel->Elevate(DeltaRotator.Pitch);
     //Turret->Rotate(DeltaRotator.Yaw);
 
-    //FMath::Abs(DeltaRotator.Yaw);
     // Always rotate the shortest way, even if crossing the axis from pos-to-neg or neg-to-pos
     if (DeltaRotator.Yaw < -180) {
         Turret->Rotate(DeltaRotator.Yaw + 360);
@@ -90,7 +89,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
         Turret->Rotate(DeltaRotator.Yaw);
     }
 
-    /*if (DeltaRotator.Yaw < 180) {
+    /*if (FMath::Abs(DeltaRotator.Yaw) < 180) {
         Turret->Rotate(DeltaRotator.Yaw);
     } else {
         Turret->Rotate(-DeltaRotator.Yaw);
