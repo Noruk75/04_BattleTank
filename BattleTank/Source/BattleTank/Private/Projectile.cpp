@@ -4,7 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
-
+#include "Engine/World.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -48,8 +48,21 @@ void AProjectile::LaunchProjectile(float Speed)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpluse, const FHitResult& Hit)
 {
+
     LaunchBlast->Deactivate();
     ImpactBlast->Activate();
     ExplosionForce->FireImpulse();
-    UE_LOG(LogTemp, Warning, TEXT("OnHit"))
+
+    SetRootComponent(ImpactBlast);
+    CollisionMesh->DestroyComponent();
+
+    FTimerHandle Timer;
+    bool InbLoop = false;
+    float InFirstDelay = -1.f;
+    GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerExpire, DestroyDelay);
+}
+
+void AProjectile::OnTimerExpire()
+{
+    Destroy();
 }
