@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
+class ATank;
 /**
  * 
  */
@@ -20,6 +21,8 @@ private:
     virtual void Tick(float DeltaTime) override;
 
     virtual void SetPawn(APawn* InPawn) override;
+
+    ATank* PossessedTank;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Setup")
